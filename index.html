@@ -8,17 +8,17 @@
     <div id="map" style="height: 500px;"></div>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.rawgit.com/google/open-location-code/gh-pages/assets/js/open-location-code.js"></script>
     <script>
         var map = L.map('map').setView([0, 0], 2);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         }).addTo(map);
 
-	var spreadsheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRQ4lJeWSeZP1rcfvX6b4bRByu3K6bj3PCNq-5bi-sGPmGpOxOdqVPrlkFPKtr32i3JNSUZG3EGdVcV/pub?output=csv'
-
-	function load_data_from_csv(data){
-		console.log('inside load data');
+        // Load and display CSV data
+        fetch('data.csv')
+            .then(response => response.text())
+            .then(data => {
                 var rows = data.split('\n');
                 for (var i = 1; i < rows.length; i++) { // Start from 1 to skip header row
                     var columns = rows[i].split(',');
@@ -39,26 +39,11 @@
                         .addTo(map)
                         .bindPopup(hospitalName);
                 }
-
-		
-	} 
-
-
-        $.ajax({
-            url: spreadsheetURL,
-            dataType: 'text',
-            success: load_data_from_csv(data)
-		
-
-
-
-
-
-
-
-
-        });
+            })
+            .catch(error => {
+                console.error('Error loading CSV data:', error);
+            });
     </script>
-    <script src="https://cdn.jsdelivr.net/openlocationcode/latest/openlocationcode.min.js"></script>
 </body>
 </html>
+
