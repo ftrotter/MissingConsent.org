@@ -24,26 +24,26 @@
                 var rows = data.split('\n');
                 for (var i = 1; i < rows.length; i++) { // Start from 1 to skip header row
                     var columns = rows[i].split(',');
-                    var lat = parseFloat(columns[0]);
-                    var lon = parseFloat(columns[1]);
-                    var hospitalName = columns[2];
-                    var traumaLevel = parseInt(columns[3]);
+                    var plusCode = columns[0];
+                    var hospitalName = columns[1];
+                    var traumaLevel = parseInt(columns[2]);
 
-                    if (!isNaN(lat) && !isNaN(lon)) {
-                        var iconUrl = 'icons/trauma' + traumaLevel + '.png';
-                        var icon = L.icon({
-                            iconUrl: iconUrl,
-                            iconSize: [32, 32],
-                        });
+                    // Convert Plus Code to coordinates
+                    var latLng = OpenLocationCode.decode(plusCode);
 
-                        var marker = L.marker([lat, lon], { icon: icon })
-                            .addTo(map)
-                            .bindPopup(hospitalName);
-                    }
+                    var iconUrl = 'icons/trauma' + traumaLevel + '.png';
+                    var icon = L.icon({
+                        iconUrl: iconUrl,
+                        iconSize: [32, 32],
+                    });
+
+                    var marker = L.marker([latLng.latitudeCenter, latLng.longitudeCenter], { icon: icon })
+                        .addTo(map)
+                        .bindPopup(hospitalName);
                 }
             }
         });
     </script>
+    <script src="https://cdn.rawgit.com/google/open-location-code/gh-pages/assets/js/open-location-code.js"></script>
 </body>
 </html>
-
