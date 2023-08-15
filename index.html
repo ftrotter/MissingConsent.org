@@ -18,10 +18,8 @@
         var spreadsheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRQ4lJeWSeZP1rcfvX6b4bRByu3K6bj3PCNq-5bi-sGPmGpOxOdqVPrlkFPKtr32i3JNSUZG3EGdVcV/pubhtml';
 	var spreadsheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRQ4lJeWSeZP1rcfvX6b4bRByu3K6bj3PCNq-5bi-sGPmGpOxOdqVPrlkFPKtr32i3JNSUZG3EGdVcV/pub?output=csv'
 
-        $.ajax({
-            url: spreadsheetURL,
-            dataType: 'text',
-            success: function(data) {
+	function load_data_from_csv(data){
+		console.log('inside load data');
                 var rows = data.split('\n');
                 for (var i = 1; i < rows.length; i++) { // Start from 1 to skip header row
                     var columns = rows[i].split(',');
@@ -42,7 +40,24 @@
                         .addTo(map)
                         .bindPopup(hospitalName);
                 }
-            }
+
+		
+	} 
+
+
+        $.ajax({
+            url: spreadsheetURL,
+            dataType: 'text',
+            success: load_data_from_csv(data)
+		
+
+
+
+
+
+
+
+
         });
     </script>
     <script src="https://cdn.jsdelivr.net/openlocationcode/latest/openlocationcode.min.js"></script>
