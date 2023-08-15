@@ -1,1 +1,49 @@
-New
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoanalysis Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+</head>
+<body>
+    <div id="map" style="height: 500px;"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        var map = L.map('map').setView([0, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(map);
+
+        var spreadsheetURL = 'PASTE_YOUR_PUBLISHED_SPREADSHEET_URL_HERE';
+
+        $.ajax({
+            url: spreadsheetURL,
+            dataType: 'text',
+            success: function(data) {
+                var rows = data.split('\n');
+                for (var i = 1; i < rows.length; i++) { // Start from 1 to skip header row
+                    var columns = rows[i].split(',');
+                    var lat = parseFloat(columns[0]);
+                    var lon = parseFloat(columns[1]);
+                    var hospitalName = columns[2];
+                    var traumaLevel = parseInt(columns[3]);
+
+                    if (!isNaN(lat) && !isNaN(lon)) {
+                        var iconUrl = 'icons/trauma' + traumaLevel + '.png';
+                        var icon = L.icon({
+                            iconUrl: iconUrl,
+                            iconSize: [32, 32],
+                        });
+
+                        var marker = L.marker([lat, lon], { icon: icon })
+                            .addTo(map)
+                            .bindPopup(hospitalName);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
